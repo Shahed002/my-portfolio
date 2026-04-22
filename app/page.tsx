@@ -1223,8 +1223,7 @@ export default function Home() {
       <GlobalParticles />
       {/* NAVBAR */}
       <nav className="fixed top-0 left-0 w-full flex justify-between items-center px-10 py-6 text-[13px] z-60 backdrop-blur-xl bg-black/40 border-b border-white/3">
-        <a href="#home" className="cursor-pointer group flex items-center gap-2" onClick={() => { if (showModal) closeModal(); if (showEmailForm) setShowEmailForm(false); setActive("home"); }}>
-          <img src="/logo.png" alt="Logo" className="w-6 h-6 transition-all duration-300 group-hover:scale-110" />
+        <a href="#home" className="cursor-pointer group" onClick={() => { if (showModal) closeModal(); if (showEmailForm) setShowEmailForm(false); setActive("home"); }}>
           <h1 className="font-bold tracking-widest uppercase transition-all duration-300">
             <span className="inline-block text-transparent bg-clip-text [-webkit-text-fill-color:transparent] bp-gradient-anim drop-shadow-[0_0_10px_rgba(96,165,250,0.18)]">
               SHAHEDUL

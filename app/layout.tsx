@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://shahedul.com"),
   title: "Shahedul | 3D Artist & Animator",
   description: "Portfolio of Shahedul, a skilled 3D artist specializing in 3D modeling, character design, environment creation, and animation.",
+  icons: {
+    icon: '/logo.png',
+  },
   openGraph: {
     title: "Shahedul | 3D Artist & Animator",
     description: "Portfolio of Shahedul, a skilled 3D artist specializing in 3D modeling, character design, environment creation, and animation.",
