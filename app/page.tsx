@@ -1298,7 +1298,7 @@ export default function Home() {
                 href="#contact"
                 className="px-6 py-3 rounded-lg inline-block origin-left bg-blue-500 text-black border border-blue-400/30 transition-all duration-300 transform scale-[0.85] hover:scale-90 hover:bg-blue-600 hover:border-blue-300/80 hover:shadow-[0_0_45px_rgba(59,130,246,0.55)] font-semibold"
               >
-                Get in touch {" >"}
+                Get in touched {" >"}
               </a>
 
               <a
