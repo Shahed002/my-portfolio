@@ -308,7 +308,7 @@ function ProjectCard({
       style={{ "--glow-color": edgeGlowColor } as React.CSSProperties}
     >
       <div className="relative overflow-hidden rounded-lg bg-transparent p-3 h-full flex flex-col">
-        <div 
+        <div
           className="relative rounded-md overflow-hidden aspect-[1/0.8] cursor-pointer"
           onClick={() => onViewDetails({ title, desc, tags, preview: previewImage, cardId })}
         >
@@ -2004,7 +2004,7 @@ export default function Home() {
               to { opacity: 1; transform: translate(-50%, 0) scale(1); }
             }
           `}</style>
-          <div 
+          <div
             className="fixed bottom-8 left-1/2 z-[60] bg-[#111827]/90 backdrop-blur-xl border border-cyan-500/30 text-white px-6 py-3 rounded-full shadow-[0_0_30px_rgba(34,211,238,0.25)] flex items-center gap-3"
             style={{ animation: 'toastIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards' }}
           >
