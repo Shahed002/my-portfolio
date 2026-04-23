@@ -690,6 +690,8 @@ export default function Home() {
   const [loveJump, setLoveJump] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showEmailForm, setShowEmailForm] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedProject, setSelectedProject] = useState<{
     title: string;
@@ -1935,21 +1937,52 @@ export default function Home() {
             <h3 className="text-3xl font-semibold mb-6 tracking-tight text-white">
               Send me a <span className="text-transparent bg-clip-text bg-[linear-gradient(90deg,rgba(34,211,238,0.95),rgba(168,85,247,0.85))] drop-shadow-[0_0_14px_rgba(34,211,238,0.18)]">Message</span>
             </h3>
-            <form className="space-y-5" onSubmit={(e) => { e.preventDefault(); setShowEmailForm(false); }}>
+            <form className="space-y-5" onSubmit={async (e) => {
+              e.preventDefault();
+              setIsSubmitting(true);
+              setSubmitStatus("idle");
+
+              const formData = new FormData(e.currentTarget);
+              // TODO: Replace YOUR_ACCESS_KEY_HERE with your actual Web3Forms access key
+              formData.append("access_key", "83737c3f-0a66-41d2-8142-206d2c4b1775");
+
+              try {
+                const response = await fetch("https://api.web3forms.com/submit", {
+                  method: "POST",
+                  body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                  setSubmitStatus("success");
+                  setTimeout(() => {
+                    setShowEmailForm(false);
+                    setSubmitStatus("idle");
+                  }, 2500);
+                } else {
+                  setSubmitStatus("error");
+                }
+              } catch (error) {
+                setSubmitStatus("error");
+              } finally {
+                setIsSubmitting(false);
+              }
+            }}>
               <div>
                 <label className="block text-[11px] font-medium text-gray-400 mb-1.5 uppercase tracking-wider">Your Name</label>
-                <input type="text" required className="w-full px-4 py-3 bg-black/20 backdrop-blur-md border border-white/5 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-cyan-500/50 focus:bg-black/40 focus:ring-1 focus:ring-cyan-500/50 transition-all" placeholder="Elon Mask" />
+                <input type="text" name="name" required className="w-full px-4 py-3 bg-black/20 backdrop-blur-md border border-white/5 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-cyan-500/50 focus:bg-black/40 focus:ring-1 focus:ring-cyan-500/50 transition-all" placeholder="Elon Mask" />
               </div>
               <div>
                 <label className="block text-[11px] font-medium text-gray-400 mb-1.5 uppercase tracking-wider">Your Email</label>
-                <input type="email" required className="w-full px-4 py-3 bg-black/20 backdrop-blur-md border border-white/5 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-purple-500/50 focus:bg-black/40 focus:ring-1 focus:ring-purple-500/50 transition-all" placeholder="elon@example.com" />
+                <input type="email" name="email" required className="w-full px-4 py-3 bg-black/20 backdrop-blur-md border border-white/5 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-purple-500/50 focus:bg-black/40 focus:ring-1 focus:ring-purple-500/50 transition-all" placeholder="elon@example.com" />
               </div>
               <div>
                 <label className="block text-[11px] font-medium text-gray-400 mb-1.5 uppercase tracking-wider">Message</label>
-                <textarea required rows={4} className="w-full px-4 py-3 bg-black/20 backdrop-blur-md border border-white/5 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-cyan-500/50 focus:bg-black/40 focus:ring-1 focus:ring-cyan-500/50 transition-all resize-none" placeholder="How can I help you?"></textarea>
+                <textarea name="message" required rows={4} className="w-full px-4 py-3 bg-black/20 backdrop-blur-md border border-white/5 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-cyan-500/50 focus:bg-black/40 focus:ring-1 focus:ring-cyan-500/50 transition-all resize-none" placeholder="How can I help you?"></textarea>
               </div>
-              <button type="submit" className="w-full mt-2 py-3.5 rounded-xl bg-blue-500 text-black font-semibold tracking-wide border border-blue-400/30 transition-all duration-300 hover:bg-blue-600 hover:border-blue-300/80 hover:shadow-[0_0_30px_rgba(59,130,246,0.4)]">
-                Send Message
+              <button type="submit" disabled={isSubmitting} className="w-full mt-2 py-3.5 rounded-xl bg-blue-500 text-black font-semibold tracking-wide border border-blue-400/30 transition-all duration-300 hover:bg-blue-600 hover:border-blue-300/80 hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] disabled:opacity-50 disabled:cursor-not-allowed">
+                {isSubmitting ? "Sending..." : submitStatus === "success" ? "Message Sent Successfully!" : submitStatus === "error" ? "Failed to send. Try again." : "Send Message"}
               </button>
             </form>
           </div>
