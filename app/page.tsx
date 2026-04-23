@@ -308,7 +308,10 @@ function ProjectCard({
       style={{ "--glow-color": edgeGlowColor } as React.CSSProperties}
     >
       <div className="relative overflow-hidden rounded-lg bg-transparent p-3 h-full flex flex-col">
-        <div className="relative rounded-md overflow-hidden aspect-[1/0.8]">
+        <div 
+          className="relative rounded-md overflow-hidden aspect-[1/0.8] cursor-pointer"
+          onClick={() => onViewDetails({ title, desc, tags, preview: previewImage, cardId })}
+        >
           <img
             src={previewImage}
             alt={title}
@@ -316,7 +319,10 @@ function ProjectCard({
           />
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
             <button
-              onClick={() => onViewDetails({ title, desc, tags, preview: previewImage, cardId })}
+              onClick={(e) => {
+                e.stopPropagation();
+                onViewDetails({ title, desc, tags, preview: previewImage, cardId });
+              }}
               className="relative px-0 py-1 text-[10px] leading-none font-medium text-white rounded-full bg-black/30 backdrop-blur-[2px] group transition-transform duration-300 hover:scale-105 border border-white/10"
             >
               <span className="relative z-10 tracking-tight uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">View Details</span>
@@ -692,6 +698,7 @@ export default function Home() {
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedProject, setSelectedProject] = useState<{
     title: string;
@@ -1955,11 +1962,10 @@ export default function Home() {
                 const data = await response.json();
 
                 if (data.success) {
-                  setSubmitStatus("success");
-                  setTimeout(() => {
-                    setShowEmailForm(false);
-                    setSubmitStatus("idle");
-                  }, 2500);
+                  setShowEmailForm(false);
+                  setSubmitStatus("idle");
+                  setToastMessage("Message sent successfully!");
+                  setTimeout(() => setToastMessage(null), 4000);
                 } else {
                   setSubmitStatus("error");
                 }
@@ -1987,6 +1993,25 @@ export default function Home() {
             </form>
           </div>
         </div>
+      )}
+
+      {/* TOAST NOTIFICATION */}
+      {toastMessage && (
+        <>
+          <style>{`
+            @keyframes toastIn {
+              from { opacity: 0; transform: translate(-50%, 20px) scale(0.9); }
+              to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+            }
+          `}</style>
+          <div 
+            className="fixed bottom-8 left-1/2 z-[60] bg-[#111827]/90 backdrop-blur-xl border border-cyan-500/30 text-white px-6 py-3 rounded-full shadow-[0_0_30px_rgba(34,211,238,0.25)] flex items-center gap-3"
+            style={{ animation: 'toastIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards' }}
+          >
+            <div className="w-5 h-5 rounded-full bg-cyan-500 flex items-center justify-center text-black text-xs font-bold">✓</div>
+            <span className="text-sm font-medium tracking-wide">{toastMessage}</span>
+          </div>
+        </>
       )}
     </main>
   );
